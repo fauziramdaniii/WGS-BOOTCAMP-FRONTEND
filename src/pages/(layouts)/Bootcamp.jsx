@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import SearchBar from '../../components/ui/SearchBar'
+import VideoList from '../../components/ui/VideoList'
+import VideoDetail from '../../components/ui/VideoDetail'
+
 // function Clock () {
 //   // State untuk menyimpan waktu saat ini dalam format string
 //   const [clockState, setClockState] = useState(new Date().toLocaleTimeString())
@@ -139,65 +143,121 @@ import axios from 'axios'
 //   }
 // })
 
-async function fetchImages (keyword) {
-  try {
-    const response = await axios.get('https://api.unsplash.com/search/photos', {
+// async function fetchImages (keyword) {
+//   try {
+//     const response = await axios.get(
+//       'https://www.googleapis.com/youtube/v3',
+//       {
+//         params: {
+//           query: keyword
+//         },
+//         headers: {
+//           Authorization:
+//             'Client-ID 2b98c1afb0aed3b3d94a1866bdc3ac013d21a0c86d236a0fee32355c331c0296'
+//         }
+//       }
+//     )
+//     console.log(response)
+//     return response.data.results
+//   } catch (error) {
+//     console.error(error)
+//     throw error
+//   }
+// }
+
+// const KEY = 'AIzaSyC_yuIHv9jfxRL3EdpYy0x9T3SXk7adqpM'
+// axios.create({
+//   baseURL: 'https://www.googleapis.com/youtube/v3/',
+//   params: {
+//     part: 'snippet',
+//     maxResult: 5,
+//     key: KEY
+//   }
+// })
+// function Bootcamp () {
+//   const [searchKeyword, setSearchKeyword] = useState('')
+//   const [photos, setPhotos] = useState([])
+
+//   const handleSearch = async e => {
+//     e.preventDefault()
+
+//     if (searchKeyword.trim() === '') {
+//       alert('Search keyword is empty')
+//       return
+//     }
+
+//     try {
+//       const results = await fetchImages(searchKeyword)
+//       setPhotos(results)
+//     } catch (error) {
+//       console.error('Error searching for images:', error)
+//     }
+//   }
+
+//   return (
+//     <div>
+//       <form onSubmit={handleSearch}>
+//         <div className='input-group'>
+//           <div className='input-group-prepend'>
+//             <button type='submit'>Search</button>
+//           </div>
+//           <input
+//             type='text'
+//             id='search'
+//             name='search'
+//             value={searchKeyword}
+//             onChange={e => setSearchKeyword(e.target.value)}
+//             class='form-control'
+//             aria-label='Default'
+//             aria-describedby='inputGroup-sizing-default'
+//           />
+//         </div>
+//       </form>
+//       <div className='photo-container'>
+//         {photos.map(photo => (
+//           <div key={photo.id} className='box'>
+//             <a href={photo.links.html} target='_blank'>
+//               <img src={photo.urls.small} alt={photo.alt_description} />
+//             </a>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   )
+// }
+
+const Bootcamp = () => {
+  const [videos, setVideos] = useState([])
+  const [selectedVideo, setSelectedVideo] = useState(null)
+
+  useEffect(() => {
+    onTermSubmit('react js') // Default search term
+  }, [])
+
+  const onTermSubmit = async term => {
+    const response = await axios.get('/search', {
+      baseURL: 'https://www.googleapis.com/youtube/v3',
       params: {
-        query: keyword
-      },
-      headers: {
-        Authorization:
-          'Client-ID 2b98c1afb0aed3b3d94a1866bdc3ac013d21a0c86d236a0fee32355c331c0296'
+        part: 'snippet',
+        maxResults: 5,
+        key: 'AIzaSyDkDQMauDt0rs89DhDTW9ex-9EiM5ISV3g',
+        q: term
       }
     })
-    console.log(response)
-    return response.data.results
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
-}
-
-function Bootcamp () {
-  const [searchKeyword, setSearchKeyword] = useState('')
-  const [photos, setPhotos] = useState([])
-
-  const handleSearch = async e => {
-    e.preventDefault()
-
-    if (searchKeyword.trim() === '') {
-      alert('Search keyword is empty')
-      return
-    }
-
-    try {
-      const results = await fetchImages(searchKeyword)
-      setPhotos(results)
-    } catch (error) {
-      console.error('Error searching for images:', error)
-    }
+    console.log(response.data.items)
+    setVideos(response.data.items)
+    setSelectedVideo(response.data.items[0])
   }
 
   return (
-    <div>
-      <form onSubmit={handleSearch}>
-        <input
-          type='search'
-          id='search'
-          name='search'
-          value={searchKeyword}
-          onChange={e => setSearchKeyword(e.target.value)}
-        />
-        <button type='submit'>Search</button>
-      </form>
-      <div className='photo-container'>
-        {photos.map(photo => (
-          <div key={photo.id} className='box'>
-            <a href={photo.links.html} target='_blank'>
-              <img src={photo.urls.small} alt={photo.alt_description} />
-            </a>
-          </div>
-        ))}
+    <div className='container'>
+      <div className='left-column'>
+        <h1>YouTube Video Search</h1>
+        <SearchBar onFormSubmit={onTermSubmit} />
+        <VideoDetail video={selectedVideo} />
+      </div>
+      <div className='right-column' style={{ marginBottom: 'length' }}>
+        <VideoList videos={videos} onVideoSelect={setSelectedVideo} />
       </div>
     </div>
   )

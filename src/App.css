@@ -70,3 +70,42 @@
     width: calc(100% - 40px);
   }
 }
+/* Bootcamp.css */
+.container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.left-column {
+  flex: 0.7;
+}
+
+.right-column {
+  flex: 0.3;
+}
+
+/* VideoList.css */
+.video-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 50px;
+  margin-left: 100px;
+}
+
+.video-card {
+  width: 200px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.video-card img {
+  width: 100%;
+  height: auto;
+}
+
+.video-info {
+  padding: 10px;
+  background-color: #000000;
+}
