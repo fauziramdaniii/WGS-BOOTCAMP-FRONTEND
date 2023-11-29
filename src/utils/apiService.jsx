@@ -6,12 +6,12 @@ const apiService = {
       let response = await axios.get(`${import.meta.env.VITE_API_URL}${uri}`, {
         params: params
       })
-
       return response
     } catch (error) {
-      return error
+      return error.response ? error.response : error
     }
   },
+
   byPostData: async (uri, body) => {
     try {
       let response = await axios.post(
